@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WhatsApp Gateway Login</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body style="font-family: Arial; text-align:center; padding-top:40px">
+    <h2>WhatsApp Gateway — Login</h2>
+
+    <div id="status" style="margin-bottom:20px;">
+        Menunggu QR...
+    </div>
+
+    <div>
+        <img id="qr" src="" style="width:250px; border:1px solid #ccc; padding:10px;">
+    </div>
+
+    <script>
+        const socket = io();
+
+        socket.on('qr', (qrData) => {
+            document.getElementById('qr').src = qrData;
+            document.getElementById('status').innerHTML = "Silakan scan QR dengan WhatsApp";
+        });
+
+        socket.on('ready', (msg) => {
+            document.getElementById('status').innerHTML = msg;
+            document.getElementById('qr').style.display = "none";
+        });
+
+        socket.on('loading', (obj) => {
+            document.getElementById('status').innerHTML =
+                `Loading: ${obj.percent}% — ${obj.message}`;
+        });
+    </script>
+</body>
+</html>
